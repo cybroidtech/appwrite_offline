@@ -1,0 +1,29 @@
+name: appwrite_offline
+description: "A Flutter Data adapter for Appwrite that provides offline support, real-time updates, and seamless integration with Flutter Data's powerful features."
+version: 0.0.1
+homepage: https://github.com/cybroidtech/appwrite_offline
+repository: https://github.com/cybroidtech/appwrite_offline
+issue_tracker: https://github.com/cybroidtech/appwrite_offline/issues
+documentation: https://github.com/cybroidtech/appwrite_offline/blob/main/README.md
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  appwrite: ^13.0.0
+  flutter_data: ^1.6.0
+  get_it: ^8.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+topics:
+  - appwrite
+  - offline
+  - database
+  - flutter-data
