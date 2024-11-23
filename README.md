@@ -7,7 +7,7 @@ A Flutter Data adapter for Appwrite that provides offline support, real-time upd
 - 🔄 **Automatic Synchronization**: Seamlessly sync data between local storage and Appwrite
 - 📱 **Offline Support**: Work with your data even when offline
 - ⚡ **Real-time Updates**: Listen to changes in your Appwrite collections in real-time
-- 🔍 **Advanced Querying**: Rich querying capabilities with operators like ('>=', '==', '!=', etc) and methods like 'startsWith', etc.
+- 🔍 **Advanced Querying**: Supported operators: '==', '!=', '>', '>=', '<', '<=', 'startsWith', 'endsWith', 'contains', 'search', 'between', 'in', 'isNull', 'isNotNull'.
 - 🎯 **Type-safe**: Fully typed models and queries
 - 🪄 **Easy Integration**: Simple setup process with minimal configuration
 
