@@ -41,3 +41,9 @@
 - This is the initial release and should be considered beta
 - Feedback and contributions are welcome
 - Testing in production environments is recommended before critical usage
+
+## [0.0.2] - 2024-11-23
+
+### Improvements
+- Fixed Flutter Data Documentation Link
+- Fixed Bug in the Adapter's `sendRequest`

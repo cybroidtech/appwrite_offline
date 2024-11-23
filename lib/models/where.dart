@@ -1,7 +1,7 @@
 import 'package:appwrite_offline/models/filter.dart';
 
 /// A class that represents a collection of filters to be applied in a database query.
-/// 
+///
 /// This class is used to group multiple [Filter] conditions together for complex queries.
 class Where {
   /// List of filters to be applied
@@ -11,9 +11,9 @@ class Where {
   Where(this.filters);
 
   /// Creates a Where instance from a JSON map.
-  /// 
+  ///
   /// The JSON map should contain field-value pairs or field-operator-value pairs.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// Where.fromJson({

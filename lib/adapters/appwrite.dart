@@ -175,7 +175,7 @@ mixin AppwriteAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
     try {
       final collectionId = type;
       final documentId =
-          uri.pathSegments.length > 1 ? uri.pathSegments[1] : null;
+          uri.pathSegments.length > 2 ? uri.pathSegments[2] : null;
 
       dynamic response;
 

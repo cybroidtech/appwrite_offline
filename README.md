@@ -16,7 +16,7 @@ A Flutter Data adapter for Appwrite that provides offline support, real-time upd
 Before using this package, make sure you:
 
 1. Have a working Appwrite backend setup
-2. Understand and follow [Flutter Data's setup guide](https://flutterdata.dev/getting-started) carefully
+2. Understand and follow [Flutter Data's setup guide](https://flutterdata.dev) carefully
 3. Are using Riverpod for state management
 
 This package only handles the Appwrite integration with Flutter Data. All other Flutter Data configurations must be properly set up.

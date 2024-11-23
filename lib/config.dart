@@ -6,14 +6,14 @@ final locator = GetIt.instance;
 /// Configuration class for AppwriteAdapter
 class AppwriteOffline {
   /// Initializes the AppwriteAdapter configuration and sets up Appwrite services
-  /// 
+  ///
   /// Parameters:
   /// - [projectId]: Your Appwrite project ID
   /// - [databaseId]: Your Appwrite database ID
   /// - [endpoint]: Appwrite API endpoint (defaults to 'https://cloud.appwrite.io/v1')
   /// - [selfSigned]: Whether to allow self-signed certificates (defaults to false)
   /// - [jwt]: Optional JWT token for authenticated requests
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// void main() {
@@ -50,7 +50,7 @@ class AppwriteOffline {
     locator.registerSingleton<Databases>(
       Databases(client),
     );
-    
+
     locator.registerSingleton<Realtime>(
       Realtime(client),
     );
