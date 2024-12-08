@@ -344,6 +344,23 @@ mixin AppwriteAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
     }
   }
 
+  @override
+  bool isOfflineError(Object? error) {
+    final commonExceptions = [
+      // timeouts via http's `connectionTimeout` are also socket exceptions
+      'SocketException',
+      'HttpException',
+      'HandshakeException',
+      'TimeoutException',
+    ];
+
+    // we check exceptions with strings to avoid importing `dart:io`
+    final err = error is AppwriteException
+        ? error.message ?? error.toString()
+        : error.runtimeType.toString();
+    return commonExceptions.any(err.contains);
+  }
+
   /// Parses permission rules from query parameters
   ///
   /// Supported permission types:

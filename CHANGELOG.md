@@ -1,3 +1,8 @@
+## [0.0.4] - 2024-12-08
+
+### Improvements
+- Add AppwriteException to offline Exception handling.
+
 ## [0.0.3] - 2024-12-08
 
 ### Improvements
