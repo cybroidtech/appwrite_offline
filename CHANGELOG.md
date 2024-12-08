@@ -1,3 +1,19 @@
+## [0.0.3] - 2024-12-08
+
+### Improvements
+- Added Offline Handling for `save` and `delete` methods
+- Change `CHANGELOG.md` to Descending ordering.
+### Comments
+- Thanks to all those who take time to like this package.
+- Am actively looking for contributors of this package, as a solo contributor I can't do much.
+- You can contribute either in the documentation, review, test, code and maintenance.
+
+## [0.0.2] - 2024-11-23
+
+### Improvements
+- Fixed Flutter Data Documentation Link
+- Fixed Bug in the Adapter's `sendRequest`
+
 ## [0.0.1] - 2024-11-23
 
 ### Added
@@ -41,9 +57,3 @@
 - This is the initial release and should be considered beta
 - Feedback and contributions are welcome
 - Testing in production environments is recommended before critical usage
-
-## [0.0.2] - 2024-11-23
-
-### Improvements
-- Fixed Flutter Data Documentation Link
-- Fixed Bug in the Adapter's `sendRequest`

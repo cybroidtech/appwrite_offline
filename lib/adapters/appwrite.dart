@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:appwrite_offline/config.dart';
+import 'package:appwrite_offline/extensions/framework.dart';
 import 'package:appwrite_offline/models.dart';
 import 'package:flutter_data/flutter_data.dart';
 import 'package:appwrite/appwrite.dart';
@@ -297,9 +298,46 @@ mixin AppwriteAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
         statusCode: 200,
       );
       return onSuccess(data, label);
-    } on AppwriteException catch (e) {
+    } on AppwriteException catch (error) {
       // AppwriteException thrown
-      return onError(DataException(e), label);
+      // Check Offline Error
+      if (isOfflineError(error)) {
+        // queue a new operation if:
+        //  - this is a network error and we're offline
+        //  - the request was not a find
+        if (method != DataRequestMethod.GET) {
+          OfflineOperation<T>(
+            httpRequest: '${method.toShortString()} $uri',
+            label: label,
+            timestamp: DateTime.now().millisecondsSinceEpoch,
+            body: body?.toString(),
+            headers: headers,
+            onSuccess: onSuccess as OnSuccessGeneric<T>,
+            onError: onError as OnErrorGeneric<T>,
+            adapter: this as RemoteAdapter<T>,
+          ).add();
+        }
+
+        // wrap error in an OfflineException
+        final offlineException = OfflineException(error: error);
+
+        // call error handler but do not return it
+        // (this gives the user the chance to present
+        // a UI element to retry fetching, for example)
+        onError(offlineException, label);
+
+        // instead return a fallback model from local storage
+        switch (label.kind) {
+          case 'findAll':
+            return findAll(remote: false) as Future<R?>;
+          case 'findOne':
+          case 'save':
+            return label.model as R?;
+          default:
+            return null;
+        }
+      }
+      return onError(DataException(error), label);
     } catch (e) {
       // Other Exception thrown
       return onError(DataException(e), label);

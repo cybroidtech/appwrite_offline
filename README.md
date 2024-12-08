@@ -27,7 +27,7 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  appwrite_offline: ^0.0.1
+  appwrite_offline: ^0.0.3
 ```
 
 ## Setup
