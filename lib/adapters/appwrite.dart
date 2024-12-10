@@ -345,6 +345,9 @@ mixin AppwriteAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
     }
   }
 
+  /// Determines Whether the error is offline one
+  /// 
+  /// Used in `sendRequest` to handle offline state
   @override
   bool isOfflineError(Object? error) {
     final commonExceptions = [
