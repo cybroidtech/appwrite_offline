@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:appwrite_offline/config.dart';
 import 'package:appwrite_offline/extensions/framework.dart';
 import 'package:appwrite_offline/models.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter_data/flutter_data.dart';
 import 'package:appwrite/appwrite.dart';
 
@@ -179,7 +180,6 @@ mixin AppwriteAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
           uri.pathSegments.length > 2 ? uri.pathSegments[2] : null;
 
       dynamic response;
-
       Map? bodyData = body != null ? json.decode(body as String) : null;
       Set<String> keysToRemove = {'id', 'createdAt', 'updatedAt'};
       bodyData?.removeWhere(
@@ -263,14 +263,16 @@ mixin AppwriteAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
           break;
         case DataRequestMethod.PUT:
         case DataRequestMethod.PATCH:
-          if (documentId == null) {
+          if (documentId == null || bodyData == null) {
             throw Exception('Document ID is required for PATCH operations');
           }
+          final updateData = _parsePartialUpdate(
+              queryParams: uri.queryParameters, body: bodyData);
           final updatedDoc = await _databases.updateDocument(
             databaseId: databaseId,
             collectionId: collectionId,
             documentId: documentId,
-            data: bodyData,
+            data: updateData,
           );
           updatedDoc.data.addAll({
             "id": updatedDoc.$id,
@@ -359,6 +361,23 @@ mixin AppwriteAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
         ? error.message ?? error.toString()
         : error.runtimeType.toString();
     return commonExceptions.any(err.contains);
+  }
+
+  /// Parses updatedFields from query parameters
+  ///
+  /// And Returns only a new request body with only updated fields
+  Map _parsePartialUpdate(
+      {required Map<String, String> queryParams, required Map body}) {
+    if (!queryParams.containsKey('updatedFields')) {
+      return body;
+    }
+
+    List updatedFields = json.decode(queryParams['updatedFields']!);
+    Set keysToRemove =
+        body.keys.where((key) => !updatedFields.contains(key)).toSet();
+    body.removeWhere(
+        (key, value) => value == null || keysToRemove.contains(key));
+    return body;
   }
 
   /// Parses permission rules from query parameters

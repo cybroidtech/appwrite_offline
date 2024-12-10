@@ -1,3 +1,9 @@
+## [0.0.5] - 2024-12-10
+
+### Improvements
+- Add `updatedFields` save param to facilitate partial updates (PATCH).
+- Updated the documentation to showcase the usage of this param.
+
 ## [0.0.4] - 2024-12-08
 
 ### Improvements

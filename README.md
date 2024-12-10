@@ -8,7 +8,7 @@ A Flutter Data adapter for Appwrite that provides offline support, real-time upd
 - 📱 **Offline Support**: Work with your data even when offline
 - ⚡ **Real-time Updates**: Listen to changes in your Appwrite collections in real-time
 - 🔍 **Advanced Querying**: Supported operators: '==', '!=', '>', '>=', '<', '<=', 'startsWith', 'endsWith', 'contains', 'search', 'between', 'in', 'isNull', 'isNotNull'.
-- 🎯 **Type-safe**: Fully typed models and queries
+- 🎯 **Type-safe**: Fully typed models, queries, & partial updates
 - 🪄 **Easy Integration**: Simple setup process with minimal configuration
 
 ## Prerequisites
@@ -27,7 +27,7 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  appwrite_offline: ^0.0.3
+  appwrite_offline: ^0.0.5
 ```
 
 ## Setup
@@ -92,6 +92,12 @@ class Product extends DataModel<Product> {
 dart run build_runner build -d
 ```
 
+OR
+
+```bash
+dart run build_runner watch
+```
+
 ## Usage
 
 ### Basic Operations
@@ -100,7 +106,7 @@ dart run build_runner build -d
 class ProductsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Watch all products with offline support
+    // Watch all products with offline sync support
     final productsState = ref.products.watchAll(
       syncLocal: true,
     );
@@ -141,12 +147,23 @@ class ProductFormScreen extends ConsumerWidget {
           name: 'New Product',
           price: 99.99,
         ).save();
-
+        
         // Update existing product
         final updatedProduct = await Product(
           name: 'Updated Product',
           price: 149.99,
         ).withKeyOf(existingProduct).save();
+        
+        // Partially update existing product
+        final updatedProduct = await Product(
+          name: 'Product Name',
+          price: 239.99,
+        ).withKeyOf(existingProduct).save(
+          params: {
+            "updatedFields": jsonEncode(['price']), 
+            // This informs the adapter to only send these fields, hence improving performance
+          },
+        );
       },
       child: Text('Save Product'),
     );
