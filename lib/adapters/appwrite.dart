@@ -6,7 +6,6 @@ import 'dart:convert';
 import 'package:appwrite_offline/config.dart';
 import 'package:appwrite_offline/extensions/framework.dart';
 import 'package:appwrite_offline/models.dart';
-import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter_data/flutter_data.dart';
 import 'package:appwrite/appwrite.dart';
 
