@@ -25,7 +25,7 @@ class AppwriteOffline {
   ///   );
   /// }
   /// ```
-  static void initialize({
+  static initialize({
     required String projectId,
     required String databaseId,
     String endpoint = 'https://cloud.appwrite.io/v1',
@@ -63,6 +63,7 @@ class AppwriteOffline {
         endpoint: endpoint,
       ),
     );
+    
   }
 
   /// Updates the JWT token for the current client

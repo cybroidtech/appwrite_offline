@@ -249,7 +249,7 @@ mixin AppwriteAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
           final newDoc = await _databases.createDocument(
             databaseId: databaseId,
             collectionId: collectionId,
-            documentId: ID.unique(),
+            documentId: bodyData?['id'] ?? ID.unique(),
             data: bodyData ?? {},
             permissions: permissions,
           );
@@ -345,8 +345,51 @@ mixin AppwriteAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
     }
   }
 
+  /// Returns URL for [save]. Defaults to [type]/[id] (if [id] is present).
+  ///
+  /// Note: We override this to check our update flag instead.
+  @override
+  String urlForSave(id, Map<String, dynamic> params) =>
+      params['_flag'] == 'update' ? '$type/$id' : type;
+
+  /// Modifies the Body of the request to include ID by default
+  ///
+  /// Note: This is useful for offline synchronization.
+  ///
+  ///     - We utilize appwrite's builtin `ID.unique()`
+  @override
+  Future<T> save(
+    T model, {
+    bool? remote,
+    Map<String, dynamic>? params,
+    Map<String, String>? headers,
+    OnSuccessOne<T>? onSuccess,
+    OnErrorOne<T>? onError,
+    DataRequestLabel? label,
+  }) async {
+    params ??= {};
+    // Attach Unique ID if None
+    final serialized = await serialize(model);
+    if (!serialized.containsKey('id') || serialized['id'] == null) {
+      serialized['id'] = ID.unique();
+      params['_flag'] = 'new';
+    } else {
+      params['_flag'] = 'update';
+    }
+    model = (await deserialize(serialized)).model!;
+    return super.save(
+      model,
+      remote: remote,
+      params: params,
+      headers: headers,
+      onSuccess: onSuccess,
+      onError: onError,
+      label: label,
+    );
+  }
+
   /// Determines Whether the error is offline one
-  /// 
+  ///
   /// Used in `sendRequest` to handle offline state
   @override
   bool isOfflineError(Object? error) {
