@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:appwrite_offline/config.dart';
 import 'package:appwrite_offline/extensions/framework.dart';
 import 'package:appwrite_offline/models.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_data/flutter_data.dart';
 import 'package:appwrite/appwrite.dart';
 
@@ -180,10 +181,7 @@ mixin AppwriteAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
 
       dynamic response;
       Map? bodyData = body != null ? json.decode(body as String) : null;
-      Set<String> keysToRemove = {'id', 'createdAt', 'updatedAt'};
-      bodyData?.removeWhere(
-          (key, value) => value == null || keysToRemove.contains(key));
-
+      debugPrint("URI: $uri");
       switch (method) {
         case DataRequestMethod.GET:
           if (documentId == null || documentId == 'all') {
@@ -224,9 +222,9 @@ mixin AppwriteAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
 
             response = docs.documents.map((doc) {
               doc.data.addAll({
-                "id": doc.$id,
-                "createdAt": doc.$createdAt,
-                "updatedAt": doc.$updatedAt,
+                r"$id": doc.$id,
+                r"$createdAt": doc.$createdAt,
+                r"$updatedAt": doc.$updatedAt,
               });
               return doc.data;
             }).toList();
@@ -237,9 +235,9 @@ mixin AppwriteAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
               documentId: documentId,
             );
             doc.data.addAll({
-              "id": doc.$id,
-              "createdAt": doc.$createdAt,
-              "updatedAt": doc.$updatedAt,
+              r"$id": doc.$id,
+              r"$createdAt": doc.$createdAt,
+              r"$updatedAt": doc.$updatedAt,
             });
             response = doc.data;
           }
@@ -254,9 +252,9 @@ mixin AppwriteAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
             permissions: permissions,
           );
           newDoc.data.addAll({
-            "id": newDoc.$id,
-            "createdAt": newDoc.$createdAt,
-            "updatedAt": newDoc.$updatedAt,
+            r"$id": newDoc.$id,
+            r"$createdAt": newDoc.$createdAt,
+            r"$updatedAt": newDoc.$updatedAt,
           });
           response = newDoc.data;
           break;
@@ -274,9 +272,9 @@ mixin AppwriteAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
             data: updateData,
           );
           updatedDoc.data.addAll({
-            "id": updatedDoc.$id,
-            "createdAt": updatedDoc.$createdAt,
-            "updatedAt": updatedDoc.$updatedAt,
+            r"$id": updatedDoc.$id,
+            r"$createdAt": updatedDoc.$createdAt,
+            r"$updatedAt": updatedDoc.$updatedAt,
           });
           response = updatedDoc.data;
           break;
@@ -352,6 +350,16 @@ mixin AppwriteAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
   String urlForSave(id, Map<String, dynamic> params) =>
       params['_flag'] == 'update' ? '$type/$id' : type;
 
+  /// Returns HTTP method for [save]. Defaults to `PATCH` if [id] is present,
+  /// or `POST` otherwise.
+  ///
+  /// Note: We override this to check our update flag instead
+  @override
+  DataRequestMethod methodForSave(id, Map<String, dynamic> params) =>
+      params['_flag'] == 'update'
+          ? DataRequestMethod.PATCH
+          : DataRequestMethod.POST;
+
   /// Modifies the Body of the request to include ID by default
   ///
   /// Note: This is useful for offline synchronization.
@@ -373,6 +381,11 @@ mixin AppwriteAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
     if (!serialized.containsKey('id') || serialized['id'] == null) {
       serialized['id'] = ID.unique();
       params['_flag'] = 'new';
+    } else if (params.containsKey('_flag')) {
+      // Ensure id is not null
+      params['_flag'] ??= 'new';
+      // Ensure id is String
+      serialized['id'] = serialized['id']?.toString() ?? ID.unique();
     } else {
       params['_flag'] = 'update';
     }
