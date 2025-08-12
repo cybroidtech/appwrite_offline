@@ -39,7 +39,7 @@ mixin AppwriteAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
   String get baseUrl => _instance.endpoint;
 
   /// Appwrite Database ID
-  String get databaseId => _instance.databaseId;
+  String get databaseId => _instance.databaseId ?? "";
 
   /// Subscribes to real-time updates for this model's collection
   ///
@@ -171,6 +171,9 @@ mixin AppwriteAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
     DataRequestLabel? label,
     bool closeClientAfterRequest = true,
   }) async {
+    if (_instance.databaseId == null || _instance.databaseId == "") {
+      throw const DataException('Database ID is not set');
+    }
     label ??= DataRequestLabel('custom', type: internalType);
     onSuccess ??= this.onSuccess;
     onError ??= this.onError;

@@ -27,7 +27,7 @@ class AppwriteOffline {
   /// ```
   static initialize({
     required String projectId,
-    required String databaseId,
+    String? databaseId,
     String endpoint = 'https://cloud.appwrite.io/v1',
     bool selfSigned = false,
     String? jwt,
@@ -58,9 +58,9 @@ class AppwriteOffline {
     // Register configuration
     locator.registerSingleton<AppwriteOffline>(
       AppwriteOffline._(
+        endpoint: endpoint,
         projectId: projectId,
         databaseId: databaseId,
-        endpoint: endpoint,
       ),
     );
     
@@ -71,15 +71,19 @@ class AppwriteOffline {
   static void updateJWT(String jwt) {
     client.setJWT(jwt);
   }
+  
+  static void setDatabaseId(String databaseId) {
+    AppwriteOffline.instance.databaseId = databaseId;
+  }
 
   final String projectId;
-  final String databaseId;
   final String endpoint;
+  String? databaseId;
 
   AppwriteOffline._({
     required this.projectId,
-    required this.databaseId,
     required this.endpoint,
+    this.databaseId,
   });
 
   /// Get the current configuration
