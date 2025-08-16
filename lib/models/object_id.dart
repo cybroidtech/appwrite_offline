@@ -19,5 +19,5 @@
 /// final createdAt = $(document, 'createdAt'); // Returns document['createdAt'] or document['$createdAt']
 /// ```
 Object? $(map, string) {
-  return map[string] ?? map['\$$string'];
+  return map['\$$string'] ?? map[string];
 }
